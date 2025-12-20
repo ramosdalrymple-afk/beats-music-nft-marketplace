@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  beats-nft-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: beats-music-nft-marketplace
+    hostname: beats-marketplace
+    restart: unless-stopped
+    ports:
+      - "80:3000"     # Access on port 80 (standard HTTP)
+      - "3000:3000"   # Also keep 3000 available
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_SUI_NETWORK=testnet
+      - NEXT_PUBLIC_RPC_URL=https://fullnode.testnet.sui.io:443
+    # Uncomment the following for development with hot reload
+    # volumes:
+    #   - ./frontend:/app
+    #   - /app/node_modules
+    #   - /app/.next
+    networks:
+      beats-network:
+        aliases:
+          - beats.local
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  beats-network:
+    driver: bridge
+
+# Optional: Add volumes for persistent data if needed in the future
+# volumes:
+#   beats-data:

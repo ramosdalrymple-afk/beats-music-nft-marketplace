@@ -47,7 +47,7 @@ export default function BeatsTap() {
 
       const result = await client.devInspectTransactionBlock({
         sender: account?.address || '0x0000000000000000000000000000000000000000000000000000000000000000',
-        transactionBlock: tx,
+        transactionBlock: tx as any,
       });
 
       if (result.results?.[0]?.returnValues) {
@@ -65,7 +65,7 @@ export default function BeatsTap() {
         options: { showContent: true }
       });
 
-      if (marketplaceObject?.data?.content?.fields) {
+      if (marketplaceObject?.data?.content && 'fields' in marketplaceObject.data.content) {
         const musicLibrary = (marketplaceObject.data.content.fields as any).music_library;
         
         if (musicLibrary?.fields?.id?.id) {
@@ -93,7 +93,7 @@ export default function BeatsTap() {
                 options: { showContent: true }
               });
 
-              if (fieldObject?.data?.content?.fields) {
+              if (fieldObject?.data?.content && 'fields' in fieldObject.data.content) {
                 const fields = fieldObject.data.content.fields as any;
                 if (fields.value?.fields) {
                   const listing = fields.value.fields;
@@ -119,7 +119,8 @@ export default function BeatsTap() {
           });
 
           const musicList = (await Promise.all(musicPromises))
-            .filter(m => m !== null && !BLOCKED_NFTS.has(m.id));
+            .filter((m): m is NonNullable<typeof m> => m !== null)
+            .filter(m => !BLOCKED_NFTS.has(m.id));
           setListedMusic(musicList);
         }
       }
@@ -139,7 +140,7 @@ export default function BeatsTap() {
 
       const result = await client.devInspectTransactionBlock({
         sender: account.address,
-        transactionBlock: tx,
+        transactionBlock: tx as any,
       });
 
       if (result.results?.[0]?.returnValues?.[0]) {
@@ -154,7 +155,7 @@ export default function BeatsTap() {
 
           const sessionResult = await client.devInspectTransactionBlock({
             sender: account.address,
-            transactionBlock: tx2,
+            transactionBlock: tx2 as any,
           });
 
           if (sessionResult.results?.[0]?.returnValues) {
@@ -281,7 +282,7 @@ export default function BeatsTap() {
       });
 
       signAndExecuteTransactionBlock(
-        { transactionBlock: tx },
+        { transactionBlock: tx as any },
         {
           onSuccess: () => {
             setSuccess('Started listening! Rewards are accumulating...');
@@ -335,7 +336,7 @@ export default function BeatsTap() {
       });
 
       signAndExecuteTransactionBlock(
-        { transactionBlock: tx },
+        { transactionBlock: tx as any },
         {
           onSuccess: () => {
             setSuccess('Listening time updated!');
@@ -374,7 +375,7 @@ export default function BeatsTap() {
       });
 
       signAndExecuteTransactionBlock(
-        { transactionBlock: tx },
+        { transactionBlock: tx as any },
         {
           onSuccess: () => {
             setSuccess(`Claimed ${pendingRewards.toFixed(8)} SUI!`);

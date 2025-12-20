@@ -51,9 +51,9 @@ export default function BeatsMusic() {
 
   const loadFavorites = async () => {
     try {
-      const result = await window.storage.get('beats-favorites');
-      if (result && result.value) {
-        const favoritesArray = JSON.parse(result.value);
+      const stored = localStorage.getItem('beats-favorites');
+      if (stored) {
+        const favoritesArray = JSON.parse(stored);
         setLiked(new Set(favoritesArray));
       }
     } catch (err) {
@@ -64,7 +64,7 @@ export default function BeatsMusic() {
   const saveFavorites = async (newLiked: Set<string>) => {
     try {
       const favoritesArray = Array.from(newLiked);
-      await window.storage.set('beats-favorites', JSON.stringify(favoritesArray));
+      localStorage.setItem('beats-favorites', JSON.stringify(favoritesArray));
     } catch (err) {
       console.error('Error saving favorites:', err);
     }
@@ -100,7 +100,7 @@ const fetchUserNFTs = async () => {
 
   try {
     let allObjects: any[] = [];
-    let cursor: string | null = null;
+    let cursor: string | null | undefined = null;
     let hasNextPage = true;
 
     // 🔁 PAGINATION LOOP
@@ -676,7 +676,7 @@ const fetchUserNFTs = async () => {
                                 const saveFavorites = async (favSet: Set<string>) => {
                                   try {
                                     const favoritesArray = Array.from(favSet);
-                                    await window.storage.set('beats-favorites', JSON.stringify(favoritesArray));
+                                    localStorage.setItem('beats-favorites', JSON.stringify(favoritesArray));
                                   } catch (err) {
                                     console.error('Error saving favorites:', err);
                                   }

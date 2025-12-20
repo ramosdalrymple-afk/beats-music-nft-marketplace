@@ -59,7 +59,7 @@ const fetchUserNFTs = async () => {
 
   try {
     let allObjects: any[] = [];
-    let cursor: string | null = null;
+    let cursor: string | null | undefined = null;
     let hasNextPage = true;
 
     // 🔁 PAGINATION LOOP (THIS IS THE FIX)
@@ -150,7 +150,7 @@ const fetchUserNFTs = async () => {
 
       signAndExecuteTransaction(
         {
-          transactionBlock: tx,
+          transactionBlock: tx as any,
           options: {
             showEffects: true,
             showObjectChanges: true,

@@ -66,7 +66,11 @@ export default function Marketplace() {
       setDebugInfo('Marketplace loaded. Searching for listed items...');
 
       // Check if the marketplace has the items field
-      const itemsField = marketplaceObj.data.content.fields?.items;
+      if (!('fields' in marketplaceObj.data.content)) {
+        throw new Error('Marketplace content has no fields');
+      }
+
+      const itemsField = (marketplaceObj.data.content.fields as any)?.items;
       if (!itemsField?.fields?.id?.id) {
         throw new Error('Marketplace items field not found');
       }
@@ -99,7 +103,7 @@ export default function Marketplace() {
 
           console.log('Listing field:', listingField);
 
-          const listingData = listingField.data?.content?.fields?.value?.fields;
+          const listingData = (listingField.data?.content as any)?.fields?.value?.fields;
           if (!listingData) continue;
 
           const itemId = field.name.value;
@@ -128,10 +132,10 @@ export default function Marketplace() {
 
             console.log('NFT object:', nftFieldObj);
 
-            let nftContent = nftFieldObj.data?.content?.fields?.value?.fields || {};
-            
+            let nftContent = (nftFieldObj.data?.content as any)?.fields?.value?.fields || {};
+
             if (!nftContent.name) {
-              nftContent = nftFieldObj.data?.content?.fields || {};
+              nftContent = (nftFieldObj.data?.content as any)?.fields || {};
             }
             
             console.log('NFT Content Details:', {
@@ -200,7 +204,7 @@ export default function Marketplace() {
 
       signAndExecuteTransaction(
         {
-          transactionBlock: tx,
+          transactionBlock: tx as any,
           options: {
             showEffects: true,
             showObjectChanges: true,

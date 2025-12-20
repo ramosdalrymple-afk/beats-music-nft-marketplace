@@ -23,6 +23,7 @@ interface Trade {
 interface TradeHistoryViewProps {
   account: any;
   client: SuiClient;
+  TRADING_CONFIG?: any;
 }
 
 const TradeHistoryView: React.FC<TradeHistoryViewProps> = ({
